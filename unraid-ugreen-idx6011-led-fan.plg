@@ -17,7 +17,7 @@
 </CHANGES>
 <FILE Name="&plgdir;/&name;-&version;.txz">
 <URL>https://github.com/omgapuppy/unraid-ugreen-idx6011-led-fan/releases/download/&version;/&name;-&version;.txz</URL>
-<SHA256>92dfe5afa75b749199c2c31765c84b80693b1f14b98c1f80b4f46a6c8c8560d1</SHA256>
+<SHA256>b1b0eae19316fade89de6f7ec81f7f4f0b8c974692c6c006e691acebd47634db</SHA256>
 </FILE>
 <FILE Run="/bin/bash">
 <INLINE>
