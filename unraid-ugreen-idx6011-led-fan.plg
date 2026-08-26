@@ -2,13 +2,15 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name "unraid-ugreen-idx6011-led-fan">
 <!ENTITY author "omgapuppy">
-<!ENTITY version "2026.08.26.1">
+<!ENTITY version "2026.08.26.2">
 <!ENTITY plgdir "/boot/config/plugins/&name;">
 ]>
 <PLUGIN name="&name;" author="&author;" version="&version;" min="7.0.0"
  support="https://github.com/omgapuppy/unraid-ugreen-idx6011-led-fan/issues"
  pluginURL="https://raw.githubusercontent.com/omgapuppy/unraid-ugreen-idx6011-led-fan/main/&name;.plg">
 <CHANGES>
+###2026.08.26.2
+- Writes the physical parity bay after the raw power-light refresh so bay 1 cannot be cleared on non-Pro hardware.
 ###2026.08.26.1
 - Reworked physical-disk discovery so parity and bridged SATA devices cannot be skipped.
 - Re-asserts the parity bay after other controller writes.
@@ -22,7 +24,7 @@
 </CHANGES>
 <FILE Name="&plgdir;/&name;-&version;.txz">
 <URL>https://github.com/omgapuppy/unraid-ugreen-idx6011-led-fan/releases/download/&version;/&name;-&version;.txz</URL>
-<SHA256>f8e5985bb647f2b93301bc1f49833022097bc540efce06deed72ec9f18255f88</SHA256>
+<SHA256>9d98d5ac7921fa27d3780ef9887db52c7f4f2258f920ff1c8e765adc4725e11a</SHA256>
 </FILE>
 <FILE Run="/bin/bash">
 <INLINE>

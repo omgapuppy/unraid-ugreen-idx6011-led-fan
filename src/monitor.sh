@@ -264,8 +264,13 @@ while true; do
   lan_led eth0 network_stat
   lan_led eth1 network_stat2
 
+  # Refresh power before the parity bay. The raw power-light transaction can
+  # disturb the controller's first disk register on non-Pro hardware, so bay 1
+  # must be the final LED command when it contains parity.
+  [ "$POWER_LED" = 0 ] || power_refresh
+
   # The iDX controller can lose the first disk register after later LED writes.
-  # Re-assert the physical parity bay last on every pass. This is deliberately
+  # Re-assert the physical parity bay truly last on every pass. This is deliberately
   # based on Unraid's live assignment plus the physical ATA map and never wakes it.
   parity=$(parity_device)
   if [ -n "$parity" ]; then
@@ -282,6 +287,5 @@ while true; do
     done
   fi
 
-  [ "$POWER_LED" = 0 ] || power_refresh   # off => stop re-asserting; CLI writes leave it dark
   sleep $REFRESH
 done
