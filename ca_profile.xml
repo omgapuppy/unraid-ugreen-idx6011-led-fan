@@ -1,0 +1,5 @@
+<CommunityApplications>
+  <Profile>UGREEN iDX6011 LED &amp; Fan Control is an LCD-free Unraid plugin for UGREEN NASync iDX6011 and iDX6012 systems. It controls the front power, LAN, and disk-bay LEDs while leaving firmware-managed fan control untouched. Support and bug reports are handled through the project's GitHub issue tracker.</Profile>
+  <Icon>https://raw.githubusercontent.com/omgapuppy/unraid-ugreen-idx6011-led-fan/main/icon.svg</Icon>
+  <WebPage>https://github.com/omgapuppy/unraid-ugreen-idx6011-led-fan</WebPage>
+</CommunityApplications>

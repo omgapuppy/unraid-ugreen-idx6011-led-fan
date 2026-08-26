@@ -7,7 +7,7 @@
 ]>
 <PLUGIN name="&name;" author="&author;" version="&version;" min="7.0.0"
  support="https://github.com/omgapuppy/unraid-ugreen-idx6011-led-fan/issues"
- pluginURL="https://raw.githubusercontent.com/omgapuppy/unraid-ugreen-idx6011-led-fan/main/&name;.plg">
+ pluginURL="https://raw.githubusercontent.com/omgapuppy/unraid-ugreen-idx6011-led-fan/main/unraid-ugreen-idx6011-led-fan.plg">
 <CHANGES>
 ###2026.08.26.3
 - Adds the confirmed non-Pro LED register layout: one LAN channel followed by physical bays 1-6.

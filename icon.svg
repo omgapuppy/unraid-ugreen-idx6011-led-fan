@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-labelledby="title desc">
+  <title id="title">UGREEN iDX6011 LED and Fan Control</title>
+  <desc id="desc">A server bay with green status lights</desc>
+  <rect width="256" height="256" rx="36" fill="#16202a"/>
+  <rect x="42" y="34" width="172" height="188" rx="14" fill="#263746" stroke="#8fa6b8" stroke-width="8"/>
+  <path d="M66 70h124M66 116h124M66 162h124" stroke="#8fa6b8" stroke-width="8" stroke-linecap="round"/>
+  <circle cx="80" cy="70" r="9" fill="#4ade80"/><circle cx="80" cy="116" r="9" fill="#4ade80"/><circle cx="80" cy="162" r="9" fill="#60a5fa"/>
+  <path d="M169 65c18 10 25 30 15 47-9 15-28 22-44 13 14-2 24-11 28-23 4-12 1-25-9-37 4-1 7-1 10 0Z" fill="#4ade80"/>
+</svg>
