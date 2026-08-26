@@ -9,9 +9,9 @@ install -m0755 src/start.sh src/stop.sh src/restart.sh src/monitor.sh src/calibr
 install -m0755 prebuilt/ugreen_leds_cli "$STAGE/"
 [ -x idx6011-fan-status ] && install -m0755 idx6011-fan-status "$STAGE/"
 install -m0644 prebuilt/i2c-tools-*.txz "$STAGE/"
-install -m0644 src/UgreenIDX6011Control.page "$STAGE/"
+install -m0644 src/UgreenIDX6011Control.page src/UgreenIDX6011Dashboard.page "$STAGE/"
 install -m0644 src/webgui/idx-inc.php src/webgui/idx.js "$STAGE/"
 install -m0644 src/webgui/plugin-desc.md "$STAGE/README.md"
 mkdir -p release
-(cd "$STAGE" && find . -type f | sort | tar cJf - -T -) > "release/$NAME-$VER.txz"
+(cd "$STAGE" && COPYFILE_DISABLE=1 find . -type f | sort | COPYFILE_DISABLE=1 tar cJf - -T -) > "release/$NAME-$VER.txz"
 if command -v sha256sum >/dev/null; then sha256sum "release/$NAME-$VER.txz" | awk '{print $1}'; else shasum -a 256 "release/$NAME-$VER.txz" | awk '{print $1}'; fi

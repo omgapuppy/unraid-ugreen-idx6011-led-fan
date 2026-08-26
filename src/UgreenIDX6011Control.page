@@ -1,8 +1,9 @@
-Menu="Settings"
+Menu="Utilities"
 Icon="lightbulb-o"
 Title="UGREEN iDX6011 Control"
 Type="xmenu"
 Tabs="true"
+Markdown="true"
 ---
 <?php
 require_once '/usr/local/emhttp/plugins/unraid-ugreen-idx6011-led-fan/idx-inc.php';
@@ -34,9 +35,7 @@ $fans = is_executable('/usr/local/bin/idx6011-fan-status') ? trim((string)@shell
 
 This non-Pro unit has two EC-connected fans. Fan writes are intentionally unavailable in this first release until the non-Pro duty and automatic-mode registers are verified on physical hardware. Firmware automatic control remains untouched.
 
-```text
-<?php echo htmlspecialchars($fans); ?>
-```
+<pre class="idx-fans"><?php echo htmlspecialchars($fans); ?></pre>
 
 ### Bay mapping
 

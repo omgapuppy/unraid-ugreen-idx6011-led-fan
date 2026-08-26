@@ -2,13 +2,18 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name "unraid-ugreen-idx6011-led-fan">
 <!ENTITY author "omgapuppy">
-<!ENTITY version "2026.08.26">
+<!ENTITY version "2026.08.26.1">
 <!ENTITY plgdir "/boot/config/plugins/&name;">
 ]>
 <PLUGIN name="&name;" author="&author;" version="&version;" min="7.0.0"
  support="https://github.com/omgapuppy/unraid-ugreen-idx6011-led-fan/issues"
  pluginURL="https://raw.githubusercontent.com/omgapuppy/unraid-ugreen-idx6011-led-fan/main/&name;.plg">
 <CHANGES>
+###2026.08.26.1
+- Reworked physical-disk discovery so parity and bridged SATA devices cannot be skipped.
+- Re-asserts the parity bay after other controller writes.
+- Places settings behind a clickable User Utilities icon and fixes fan status rendering.
+- Adds a native Dashboard card with two graphical fan RPM gauges.
 ###2026.08.26
 - Initial LCD-free release for UGREEN NASync iDX6011/iDX6012.
 - Smart power, dual-LAN and six-bay disk LEDs with health colours and activity blinking.
@@ -17,7 +22,7 @@
 </CHANGES>
 <FILE Name="&plgdir;/&name;-&version;.txz">
 <URL>https://github.com/omgapuppy/unraid-ugreen-idx6011-led-fan/releases/download/&version;/&name;-&version;.txz</URL>
-<SHA256>b1b0eae19316fade89de6f7ec81f7f4f0b8c974692c6c006e691acebd47634db</SHA256>
+<SHA256>f8e5985bb647f2b93301bc1f49833022097bc540efce06deed72ec9f18255f88</SHA256>
 </FILE>
 <FILE Run="/bin/bash">
 <INLINE>
@@ -32,7 +37,7 @@ if [ ! -f "&plgdir;/settings.cfg" ]; then
   printf 'LEDS=1\nLED_POWER=1\nLED_ACTIVITY=1\nLED_LAN=0064ff\nLED_DISK_OK=00ff00\nLED_DISK_WARN=ff7800\nLED_DISK_BAD=ff0000\nLED_DISK_STANDBY=ffffff\nPOWERSAVE=0\nPOWERSAVE_START=23:00\nPOWERSAVE_END=07:00\n' &gt; "&plgdir;/settings.cfg"
 fi
 mkdir -p /usr/local/emhttp/plugins/&name;
-for f in UgreenIDX6011Control.page idx-inc.php idx.js restart.sh README.md; do
+for f in UgreenIDX6011Control.page UgreenIDX6011Dashboard.page idx-inc.php idx.js restart.sh README.md; do
   [ -f "&plgdir;/$f" ] &amp;&amp; cp "&plgdir;/$f" /usr/local/emhttp/plugins/&name;/
 done
 chmod +x /usr/local/emhttp/plugins/&name;/restart.sh 2&gt;/dev/null

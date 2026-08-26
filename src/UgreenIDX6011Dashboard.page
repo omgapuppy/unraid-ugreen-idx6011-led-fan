@@ -1,0 +1,49 @@
+Menu="Dashboard:0"
+Cond="version_compare(parse_ini_file('/etc/unraid-version')['version'],'6.11.9','>')"
+---
+<?php
+$raw = is_executable('/usr/local/bin/idx6011-fan-status')
+    ? (string)@shell_exec('/usr/local/bin/idx6011-fan-status 2>/dev/null') : '';
+$rpm = [0, 0];
+foreach (preg_split('/\R/', trim($raw)) as $line) {
+    if (preg_match('/fan=sysfan([12]).*rpm=([0-9]+)/', $line, $m)) $rpm[(int)$m[1]-1] = (int)$m[2];
+}
+function idx_fan_gauge($name, $rpm) {
+    $max = 2500;
+    $pct = max(0, min(100, $rpm * 100 / $max));
+    $dash = number_format(2.827 * $pct, 1, '.', '');
+    $safe = htmlspecialchars($name, ENT_QUOTES);
+    $value = number_format($rpm);
+    return <<<HTML
+<div class="idx-fan-gauge" title="{$safe}: {$value} RPM">
+  <svg viewBox="0 0 120 120" role="img" aria-label="{$safe} {$value} RPM">
+    <circle class="idx-fan-track" cx="60" cy="60" r="45"/>
+    <circle class="idx-fan-value" cx="60" cy="60" r="45" stroke-dasharray="{$dash} 282.7"/>
+    <text class="idx-fan-rpm" x="60" y="59">{$value}</text>
+    <text class="idx-fan-unit" x="60" y="76">RPM</text>
+  </svg>
+  <span>{$safe}</span>
+</div>
+HTML;
+}
+$gauges = idx_fan_gauge('System fan 1', $rpm[0]).idx_fan_gauge('System fan 2', $rpm[1]);
+$mytiles['ugreen-idx6011-fans']['column2'] = <<<HTML
+<tbody title="UGREEN iDX6011 fan RPM">
+<tr><td>UGREEN Fans</td></tr>
+<tr><td>
+<style>
+.idx-fans-wrap{display:flex;justify-content:space-around;gap:14px;padding:8px 2px 4px}
+.idx-fan-gauge{width:46%;max-width:150px;text-align:center;color:inherit}
+.idx-fan-gauge svg{display:block;width:100%;height:auto}
+.idx-fan-track,.idx-fan-value{fill:none;stroke-width:10}
+.idx-fan-track{stroke:rgba(128,128,128,.22)}
+.idx-fan-value{stroke:#ff8c2a;stroke-linecap:round;transform:rotate(-90deg);transform-origin:60px 60px}
+.idx-fan-rpm{font-size:20px;font-weight:600;text-anchor:middle;fill:currentColor}
+.idx-fan-unit{font-size:9px;text-anchor:middle;fill:#999}
+.idx-fan-gauge span{display:block;margin-top:-2px;font-size:.9em;opacity:.8}
+</style>
+<div class="idx-fans-wrap">{$gauges}</div>
+</td></tr>
+</tbody>
+HTML;
+?>

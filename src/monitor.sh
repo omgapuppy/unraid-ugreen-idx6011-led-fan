@@ -134,14 +134,26 @@ power_refresh(){
   i2cset -y $BUS $A 0x00 0xa0 0x01 0x00 0x00 0x01 0xff 0x00 0x00 0x00 0x01 0xa1 s
 }
 
-present_bays(){  # echo "<bay> /dev/<name>" for each SATA disk mapped to a bay
-  local name tran port bay
-  while read -r name tran; do
-    [ "$tran" = "sata" ] || continue
-    port=$(readlink -f /sys/block/"$name"/device 2>/dev/null | grep -oE "0000:[0-9a-f]{2}:[0-9a-f]{2}\.[0-9]/ata[0-9]+")
+port_of(){
+  readlink -f "/sys/block/$1/device" 2>/dev/null | grep -oE "0000:[0-9a-f]{2}:[0-9a-f]{2}\.[0-9]/ata[0-9]+"
+}
+
+present_bays(){  # echo "<bay> /dev/<name>" for every whole disk on a mapped ATA port
+  local path name port bay type
+  for path in /sys/block/*; do
+    name=${path##*/}
+    type=$(lsblk -dnro TYPE "/dev/$name" 2>/dev/null)
+    [ "$type" = disk ] || continue
+    port=$(port_of "$name")
+    [ -n "$port" ] || continue
     bay="${PORT_TO_BAY[$port]:-}"
     [ -n "$bay" ] && echo "$bay /dev/$name"
-  done < <(lsblk -Sndo name,tran 2>/dev/null)
+  done
+}
+
+parity_device(){
+  awk '$0=="[\"parity\"]"{p=1;next} /^\[/{p=0} p && /^device=/{gsub(/device=|"/,""); print "/dev/"$0; exit}' \
+      /var/local/emhttp/disks.ini 2>/dev/null
 }
 
 disk_colour(){
@@ -251,6 +263,24 @@ while true; do
 
   lan_led eth0 network_stat
   lan_led eth1 network_stat2
+
+  # The iDX controller can lose the first disk register after later LED writes.
+  # Re-assert the physical parity bay last on every pass. This is deliberately
+  # based on Unraid's live assignment plus the physical ATA map and never wakes it.
+  parity=$(parity_device)
+  if [ -n "$parity" ]; then
+    for b in 1 2 3 4 5 6; do
+      [ "${present[$b]:-}" = "$parity" ] || continue
+      col="${HEALTH_COL[$b]:-$COL_HEALTHY}"
+      state="${LAST_LED[disk$b]:-on}"
+      case "$state" in
+        bl:*) LED "disk$b" -blink $BLINK_ON $BLINK_OFF -color $col -brightness $BR_DISK ;;
+        sb:*) LED "disk$b" -on -color $COL_STANDBY -brightness $BR_DISK ;;
+        *)    LED "disk$b" -on -color $col -brightness $BR_DISK ;;
+      esac
+      break
+    done
+  fi
 
   [ "$POWER_LED" = 0 ] || power_refresh   # off => stop re-asserting; CLI writes leave it dark
   sleep $REFRESH
