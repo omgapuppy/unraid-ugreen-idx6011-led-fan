@@ -16,7 +16,6 @@
 #
 set -u
 
-BIN=/usr/local/bin/ugreen_leds_cli
 # SMBus I801 bus number varies with other i2c drivers loaded (i915 DDC, LPSS
 # graphics drivers...) — detect it by adapter name; fall back to 0.
 BUS=$(for d in /sys/bus/i2c/devices/i2c-*; do
@@ -116,7 +115,48 @@ BLINK_ON=60; BLINK_OFF=60                                           # hardware b
 BR_DISK=110
 BR_LAN=150
 
-LED(){ "$BIN" "$@" >/dev/null 2>&1; }
+# The non-Pro front panel has one LAN LED, then six disk LEDs. Its MCU registers
+# are therefore power=0, LAN=1, bay1..6=2..7. The Pro-oriented CLI assumes two
+# LAN LEDs and shifts every disk register by one; it also probes register 0 on
+# every invocation, which makes the power button flicker. Write the documented
+# SMBus frames directly instead.
+led_frame(){ # register command p1 p2 p3 p4
+  local reg=$1 cmd=$2 p1=${3:-0} p2=${4:-0} p3=${5:-0} p4=${6:-0} sum hi lo
+  sum=$((0xa1 + cmd + p1 + p2 + p3 + p4)); hi=$(((sum >> 8) & 255)); lo=$((sum & 255))
+  i2cset -y "$BUS" "$A" "$reg" 0xa0 0x01 0x00 0x00 "$cmd" "$p1" "$p2" "$p3" "$p4" "$hi" "$lo" s >/dev/null 2>&1
+}
+LED(){
+  local name=$1 reg arg r=255 g=255 b=255 bright=110 mode=on ton=0 toff=0; shift
+  case "$name" in
+    network_stat)  reg=1 ;;
+    network_stat2) return 0 ;; # no second front LAN LED on non-Pro hardware
+    disk[1-6])     reg=$((10#${name#disk} + 1)) ;;
+    all)
+      for arg in network_stat disk1 disk2 disk3 disk4 disk5 disk6; do LED "$arg" "$@"; done
+      return ;;
+    *) return 0 ;;
+  esac
+  while [ "$#" -gt 0 ]; do
+    case "$1" in
+      -on) mode=on; shift ;;
+      -off) mode=off; shift ;;
+      -blink) mode=blink; ton=$2; toff=$3; shift 3 ;;
+      -color) r=$2; g=$3; b=$4; shift 4 ;;
+      -brightness) bright=$2; shift 2 ;;
+      *) shift ;;
+    esac
+  done
+  [ "$mode" = off ] && { led_frame "$reg" 3 0; return; }
+  led_frame "$reg" 2 "$r" "$g" "$b" 0
+  led_frame "$reg" 1 "$bright" 0 0 0
+  if [ "$mode" = blink ]; then
+    local cycle=$((ton + toff))
+    led_frame "$reg" 3 0
+    led_frame "$reg" 4 $(((cycle >> 8) & 255)) $((cycle & 255)) $(((ton >> 8) & 255)) $((ton & 255))
+  else
+    led_frame "$reg" 3 1
+  fi
+}
 
 # power LED (raw i2c — the CLI can't drive it on this model).
 # Full host-takeover incl. mode-reset (0x04); required to light it from a cold/off state.
@@ -126,6 +166,9 @@ power_takeover(){
   i2cset -y $BUS $A 0x00 0xa0 0x01 0x00 0x00 0x02 0xff 0xff 0xff 0x00 0x03 0xa0 s; sleep 0.03
   i2cset -y $BUS $A 0x00 0xa0 0x01 0x00 0x00 0x03 0xff 0x00 0x00 0x00 0x01 0xa3 s; sleep 0.03
   i2cset -y $BUS $A 0x00 0xa0 0x01 0x00 0x00 0x01 0xff 0x00 0x00 0x00 0x01 0xa1 s
+  # Leave any prior blink/breath mode before selecting steady on.
+  led_frame 0 3 0
+  led_frame 0 3 1
 }
 # re-assert every loop (no mode-reset, so no flicker) so a CLI init-probe can never leave power dark
 power_refresh(){

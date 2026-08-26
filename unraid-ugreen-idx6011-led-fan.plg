@@ -2,13 +2,16 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name "unraid-ugreen-idx6011-led-fan">
 <!ENTITY author "omgapuppy">
-<!ENTITY version "2026.08.26.2">
+<!ENTITY version "2026.08.26.3">
 <!ENTITY plgdir "/boot/config/plugins/&name;">
 ]>
 <PLUGIN name="&name;" author="&author;" version="&version;" min="7.0.0"
  support="https://github.com/omgapuppy/unraid-ugreen-idx6011-led-fan/issues"
  pluginURL="https://raw.githubusercontent.com/omgapuppy/unraid-ugreen-idx6011-led-fan/main/&name;.plg">
 <CHANGES>
+###2026.08.26.3
+- Adds the confirmed non-Pro LED register layout: one LAN channel followed by physical bays 1-6.
+- Uses direct SMBus frames so repeated Pro-CLI probes cannot make the power button flicker.
 ###2026.08.26.2
 - Writes the physical parity bay after the raw power-light refresh so bay 1 cannot be cleared on non-Pro hardware.
 ###2026.08.26.1
@@ -24,7 +27,7 @@
 </CHANGES>
 <FILE Name="&plgdir;/&name;-&version;.txz">
 <URL>https://github.com/omgapuppy/unraid-ugreen-idx6011-led-fan/releases/download/&version;/&name;-&version;.txz</URL>
-<SHA256>9d98d5ac7921fa27d3780ef9887db52c7f4f2258f920ff1c8e765adc4725e11a</SHA256>
+<SHA256>f36d72f27c151bfac9308f5be050419d707ad6bac094ddfb46409bf27e23f337</SHA256>
 </FILE>
 <FILE Run="/bin/bash">
 <INLINE>

@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026.08.26.3
+
+- Corrected the non-Pro MCU layout after live hardware probing.
+- Replaced Pro-oriented CLI writes with direct SMBus frames to prevent power-light flicker.
+
 ## 2026.08.26.2
 
 - Reordered the controller refresh so the physical parity bay is always the final LED write.
