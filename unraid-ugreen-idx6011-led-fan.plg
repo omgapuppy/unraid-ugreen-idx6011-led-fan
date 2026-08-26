@@ -1,0 +1,53 @@
+<?xml version='1.0' standalone='yes'?>
+<!DOCTYPE PLUGIN [
+<!ENTITY name "unraid-ugreen-idx6011-led-fan">
+<!ENTITY author "omgapuppy">
+<!ENTITY version "2026.08.26">
+<!ENTITY plgdir "/boot/config/plugins/&name;">
+]>
+<PLUGIN name="&name;" author="&author;" version="&version;" min="7.0.0"
+ support="https://github.com/omgapuppy/unraid-ugreen-idx6011-led-fan/issues"
+ pluginURL="https://raw.githubusercontent.com/omgapuppy/unraid-ugreen-idx6011-led-fan/main/&name;.plg">
+<CHANGES>
+###2026.08.26
+- Initial LCD-free release for UGREEN NASync iDX6011/iDX6012.
+- Smart power, dual-LAN and six-bay disk LEDs with health colours and activity blinking.
+- Exact DMI allowlist, dynamic SATA controller discovery and optional bay calibration.
+- Fan control remains firmware-managed while non-Pro EC writes are physically validated.
+</CHANGES>
+<FILE Name="&plgdir;/&name;-&version;.txz">
+<URL>https://github.com/omgapuppy/unraid-ugreen-idx6011-led-fan/releases/download/&version;/&name;-&version;.txz</URL>
+<SHA256>92dfe5afa75b749199c2c31765c84b80693b1f14b98c1f80b4f46a6c8c8560d1</SHA256>
+</FILE>
+<FILE Run="/bin/bash">
+<INLINE>
+PRODUCT=$(tr -d '\r\n' &lt;/sys/class/dmi/id/product_name 2&gt;/dev/null)
+case "$PRODUCT" in iDX6011|iDX6012) ;; *) echo "Unsupported hardware: $PRODUCT (expected iDX6011 or iDX6012)"; true; exit;; esac
+TXZ="&plgdir;/&name;-&version;.txz"
+MARK="&plgdir;/.payload-&version;"
+if [ -f "$TXZ" ] &amp;&amp; { [ ! -f "$MARK" ] || [ "$TXZ" -nt "$MARK" ]; }; then
+  tar xJf "$TXZ" -C "&plgdir;" &amp;&amp; touch "$MARK"
+fi
+if [ ! -f "&plgdir;/settings.cfg" ]; then
+  printf 'LEDS=1\nLED_POWER=1\nLED_ACTIVITY=1\nLED_LAN=0064ff\nLED_DISK_OK=00ff00\nLED_DISK_WARN=ff7800\nLED_DISK_BAD=ff0000\nLED_DISK_STANDBY=ffffff\nPOWERSAVE=0\nPOWERSAVE_START=23:00\nPOWERSAVE_END=07:00\n' &gt; "&plgdir;/settings.cfg"
+fi
+mkdir -p /usr/local/emhttp/plugins/&name;
+for f in UgreenIDX6011Control.page idx-inc.php idx.js restart.sh README.md; do
+  [ -f "&plgdir;/$f" ] &amp;&amp; cp "&plgdir;/$f" /usr/local/emhttp/plugins/&name;/
+done
+chmod +x /usr/local/emhttp/plugins/&name;/restart.sh 2&gt;/dev/null
+[ -f "&plgdir;/start.sh" ] &amp;&amp; bash "&plgdir;/start.sh"
+echo "UGREEN iDX6011 LED control &version; installed; no LCD or boot components were installed."
+true
+</INLINE>
+</FILE>
+<FILE Run="/bin/bash" Method="remove">
+<INLINE>
+[ -f "&plgdir;/stop.sh" ] &amp;&amp; bash "&plgdir;/stop.sh"
+rm -rf /usr/local/emhttp/plugins/&name;
+rm -f /tmp/plugins/&name;.plg
+echo "UGREEN iDX6011 LED control removed; persistent settings remain in &plgdir;."
+true
+</INLINE>
+</FILE>
+</PLUGIN>

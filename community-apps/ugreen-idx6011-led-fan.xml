@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<Container version="2">
+  <Name>UGREEN iDX6011 LED &amp; Fan Control</Name>
+  <Repository>https://raw.githubusercontent.com/omgapuppy/unraid-ugreen-idx6011-led-fan/main/unraid-ugreen-idx6011-led-fan.plg</Repository>
+  <Registry>https://github.com/omgapuppy/unraid-ugreen-idx6011-led-fan</Registry>
+  <Network>None</Network>
+  <Overview>LCD-free smart RGB LED control for UGREEN NASync iDX6011/iDX6012 on Unraid.</Overview>
+  <Category>Tools:System</Category>
+  <Support>https://github.com/omgapuppy/unraid-ugreen-idx6011-led-fan/issues</Support>
+  <Project>https://github.com/omgapuppy/unraid-ugreen-idx6011-led-fan</Project>
+</Container>

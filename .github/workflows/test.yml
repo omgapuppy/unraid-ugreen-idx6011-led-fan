@@ -1,0 +1,23 @@
+name: test
+on:
+  push:
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Shell syntax
+        run: find src release -name '*.sh' -print0 | xargs -0 -n1 bash -n
+      - name: ShellCheck
+        uses: ludeeus/action-shellcheck@2.0.0
+      - name: Build and test read-only fan probe
+        run: make && make test
+      - name: Build and inspect payload
+        run: |
+          SHA=$(bash release/mkpayload.sh 2026.08.26)
+          test ${#SHA} -eq 64
+          tar tJf release/unraid-ugreen-idx6011-led-fan-2026.08.26.txz | tee /tmp/files
+          ! grep -Eq 'panel_dash|bzroot|start-panel|assert-boot|\.ko$' /tmp/files
