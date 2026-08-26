@@ -6,6 +6,8 @@ PRODUCT=$(tr -d '\r\n' </sys/class/dmi/id/product_name 2>/dev/null)
 VENDOR=$(tr -d '\r\n' </sys/class/dmi/id/sys_vendor 2>/dev/null)
 [ "$VENDOR" = UGREEN ] || { logger -t ugreen-idx "unsupported DMI vendor: $VENDOR"; exit 0; }
 case "$PRODUCT" in iDX6011|iDX6012) ;; *) logger -t ugreen-idx "unsupported DMI product: $PRODUCT"; exit 0;; esac
+# The package glob is intentionally passed through unchanged to installpkg.
+# shellcheck disable=SC2144
 command -v i2cset >/dev/null 2>&1 || { [ -f "$PLG"/i2c-tools-*.txz ] && installpkg "$PLG"/i2c-tools-*.txz >/dev/null 2>&1; }
 modprobe i2c-dev 2>/dev/null
 modprobe -r led_ugreen 2>/dev/null
