@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026.08.26.6
+
+- Do not apply rotational standby detection or its white LED state to SATA SSDs.
+
 ## 2026.08.26.5
 
 - Clear the MCU's retained blink mode before applying a solid idle or standby LED state.

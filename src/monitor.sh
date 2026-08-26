@@ -217,7 +217,14 @@ disk_colour(){
 declare -A HEALTH_COL LAST_LED DISK_IO NET_IO
 last_smart=0
 # spun-down check that does NOT wake the disk (smartctl would) — needs hdparm.
-disk_standby(){ hdparm -C "$1" 2>/dev/null | grep -qiE "standby|sleeping"; }
+disk_standby(){
+  local n=${1#/dev/}
+  # SSDs have no meaningful spindle state. Some controllers/API layers report
+  # them as non-spinning or standby even while they are active, which must not
+  # select the sleeping-disk colour.
+  [ "$(cat "/sys/block/$n/queue/rotational" 2>/dev/null)" = 1 ] || return 1
+  hdparm -C "$1" 2>/dev/null | grep -qiE "standby|sleeping"
+}
 # rc 0 if the disk did I/O since the previous call; reads /sys counters, never wakes it.
 disk_active(){
   local n=${1#/dev/} cur
