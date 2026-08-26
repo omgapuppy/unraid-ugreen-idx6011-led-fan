@@ -35,4 +35,4 @@ The plugin glue and UI in this repository are MIT licensed. This independent pro
 
 ## Community Applications
 
-The `community-apps/` template is included for later submission. Installation from the release-backed `.plg` works independently of Community Applications review.
+Community Applications metadata lives in `ca_profile.xml` and `plugins/`. Stable releases publish both the `.plg` update descriptor and its checksum-verified payload; installation works independently of Community Applications review.

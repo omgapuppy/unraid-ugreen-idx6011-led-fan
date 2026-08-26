@@ -11,6 +11,7 @@ concurrency:
   cancel-in-progress: false
 jobs:
   release:
+    if: github.event_name == 'workflow_dispatch' || !contains(github.event.head_commit.message, '[skip release]')
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
@@ -38,12 +39,21 @@ jobs:
           SHA=$(bash release/mkpayload.sh "$VER")
           sed -i -E "s#<SHA256>[0-9a-fA-F]+</SHA256>#<SHA256>$SHA</SHA256>#" unraid-ugreen-idx6011-led-fan.plg
           echo "sha=$SHA" >> "$GITHUB_OUTPUT"
+      - name: Validate release metadata
+        if: steps.existing.outputs.exists != 'true'
+        env:
+          VER: ${{ steps.meta.outputs.version }}
+          SHA: ${{ steps.build.outputs.sha }}
+        run: |
+          grep -Fq "<!ENTITY version \"$VER\">" unraid-ugreen-idx6011-led-fan.plg
+          grep -Fq "<SHA256>$SHA</SHA256>" unraid-ugreen-idx6011-led-fan.plg
+          grep -Fq 'pluginURL="https://github.com/omgapuppy/unraid-ugreen-idx6011-led-fan/releases/latest/download/unraid-ugreen-idx6011-led-fan.plg"' unraid-ugreen-idx6011-led-fan.plg
       - uses: softprops/action-gh-release@v2
         if: steps.existing.outputs.exists != 'true'
         with:
           tag_name: ${{ steps.meta.outputs.version }}
           name: ${{ steps.meta.outputs.version }}
-          prerelease: true
+          prerelease: false
           generate_release_notes: true
           files: |
             release/unraid-ugreen-idx6011-led-fan-${{ steps.meta.outputs.version }}.txz

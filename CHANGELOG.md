@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026.08.26.4
+
+- Publish update metadata and its payload checksum together through the latest stable GitHub release.
+
 ## 2026.08.26.3
 
 - Corrected the non-Pro MCU layout after live hardware probing.
