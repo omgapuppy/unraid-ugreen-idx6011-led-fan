@@ -154,6 +154,9 @@ LED(){
     led_frame "$reg" 3 0
     led_frame "$reg" 4 $(((cycle >> 8) & 255)) $((cycle & 255)) $(((ton >> 8) & 255)) $((ton & 255))
   else
+    # The non-Pro MCU can retain its hardware blink engine across a direct
+    # blink -> on transition. Pass through off so standby/idle is truly solid.
+    led_frame "$reg" 3 0
     led_frame "$reg" 3 1
   fi
 }

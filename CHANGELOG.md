@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026.08.26.5
+
+- Clear the MCU's retained blink mode before applying a solid idle or standby LED state.
+
 ## 2026.08.26.4
 
 - Publish update metadata and its payload checksum together through the latest stable GitHub release.

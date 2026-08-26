@@ -14,6 +14,8 @@ jobs:
         run: find src release -name '*.sh' -print0 | xargs -0 -n1 bash -n
       - name: ShellCheck
         uses: ludeeus/action-shellcheck@2.0.0
+        with:
+          severity: error
       - name: Build and test read-only fan probe
         run: make && make test
       - name: Build and inspect payload
