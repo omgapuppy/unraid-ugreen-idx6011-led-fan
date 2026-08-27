@@ -9,6 +9,8 @@ install -m0755 src/start.sh src/stop.sh src/restart.sh src/monitor.sh src/calibr
 install -m0755 prebuilt/ugreen_leds_cli "$STAGE/"
 [ -x idx6011-fan-status ] && install -m0755 idx6011-fan-status "$STAGE/"
 install -m0644 prebuilt/i2c-tools-*.txz "$STAGE/"
+install -d "$STAGE/images"
+install -m0644 "images/$NAME.png" "$STAGE/images/"
 install -m0644 src/UgreenIDX6011Control.page src/UgreenIDX6011Dashboard.page "$STAGE/"
 install -m0644 src/webgui/idx-inc.php src/webgui/idx.js "$STAGE/"
 install -m0644 src/webgui/plugin-desc.md "$STAGE/README.md"

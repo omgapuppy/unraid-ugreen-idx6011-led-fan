@@ -8,6 +8,6 @@
   <ReadMe>https://raw.githubusercontent.com/omgapuppy/unraid-ugreen-idx6011-led-fan/main/README.md</ReadMe>
   <Category>Tools:System</Category>
   <MinVer>7.0.0</MinVer>
-  <Icon>https://raw.githubusercontent.com/omgapuppy/unraid-ugreen-idx6011-led-fan/main/icon.svg</Icon>
+  <Icon>https://raw.githubusercontent.com/omgapuppy/unraid-ugreen-idx6011-led-fan/main/images/unraid-ugreen-idx6011-led-fan.png</Icon>
   <License>MIT</License>
 </Plugin>

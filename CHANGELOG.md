@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026.08.27.2
+
+- Add the upstream iDX6011 line-art icon to the Unraid Plugins and Community Applications pages, credited to Deivizzz.
+
 ## 2026.08.27.1
 
 - Correct the verified non-Pro physical SATA layout: ASMedia ports map to bays 1-4 and Intel PCH ports map to bays 5-6.

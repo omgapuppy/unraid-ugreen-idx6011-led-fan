@@ -15,8 +15,9 @@ upstream licenses:
 - the embedded Unraid header icon (from
   [homarr-labs/dashboard-icons](https://github.com/homarr-labs/dashboard-icons)) —
   Apache-2.0
-- the plugin icon (`images/ugreen-idx6011-pro.png`) — original line-art of the
-  iDX6011 Pro by **Deivizzz**, contributed for use in this project
+- the plugin icon (`images/unraid-ugreen-idx6011-led-fan.png`) — original line-art
+  of the iDX6011 Pro by **Deivizzz**, reused from
+  [`noodlemctwoodle/unraid-ugreen-idx6011-pro`](https://github.com/noodlemctwoodle/unraid-ugreen-idx6011-pro)
 
 ## Trademarks
 

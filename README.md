@@ -29,6 +29,8 @@ The plugin no-ops on unsupported DMI product names. It unloads the conflicting `
 
 This project began as a focused extraction of the LED work in [noodlemctwoodle/unraid-ugreen-idx6011-pro](https://github.com/noodlemctwoodle/unraid-ugreen-idx6011-pro), with thanks to its author for the Unraid packaging, health monitor and physical bay-discovery work.
 
+The Plugins-page icon is the upstream project's original iDX6011 Pro line-art by **Deivizzz**, reused with attribution.
+
 The bundled `ugreen_leds_cli` comes from [klein0r/ugreen_leds_controller](https://github.com/klein0r/ugreen_leds_controller), based on [miskcoo/ugreen_leds_controller](https://github.com/miskcoo/ugreen_leds_controller). The iDX protocol was reverse-engineered in [miskcoo issue #93](https://github.com/miskcoo/ugreen_leds_controller/issues/93). `i2c-tools` is from the Linux I²C tools project. Their GPL-2.0 terms remain in force; see `THIRD-PARTY-NOTICES.md`.
 
 The plugin glue and UI in this repository are MIT licensed. This independent project is not affiliated with or endorsed by UGREEN.
