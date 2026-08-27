@@ -10,6 +10,7 @@ idx6011-fan-status: src/idx6011-fan-status.c
 
 test:
 	sh test/idx6011-fan-status.test.sh
+	sh test/monitor-mapping.test.sh
 
 clean:
 	rm -f idx6011-fan-status

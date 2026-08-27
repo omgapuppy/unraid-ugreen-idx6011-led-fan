@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026.08.27.1
+
+- Correct the verified non-Pro physical SATA layout: ASMedia ports map to bays 1-4 and Intel PCH ports map to bays 5-6.
+
 ## 2026.08.26.6
 
 - Do not apply rotational standby detection or its white LED state to SATA SSDs.

@@ -2,13 +2,15 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name "unraid-ugreen-idx6011-led-fan">
 <!ENTITY author "omgapuppy">
-<!ENTITY version "2026.08.26.6">
+<!ENTITY version "2026.08.27.1">
 <!ENTITY plgdir "/boot/config/plugins/&name;">
 ]>
 <PLUGIN name="&name;" author="&author;" version="&version;" min="7.0.0"
  support="https://github.com/omgapuppy/unraid-ugreen-idx6011-led-fan/issues"
  pluginURL="https://github.com/omgapuppy/unraid-ugreen-idx6011-led-fan/releases/latest/download/unraid-ugreen-idx6011-led-fan.plg">
 <CHANGES>
+###2026.08.27.1
+- Corrects the verified non-Pro physical SATA layout: ASMedia ports drive bays 1-4 and Intel PCH ports drive bays 5-6.
 ###2026.08.26.6
 - Restricts sleeping-disk detection to rotational drives so active SATA SSDs never show the standby colour.
 ###2026.08.26.5

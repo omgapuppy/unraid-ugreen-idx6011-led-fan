@@ -43,11 +43,11 @@ MAP_MTIME=""
 
 # Build the default bay map by DISCOVERING each SATA controller at runtime and keying
 # on its relative ata-port order — never a hardcoded PCI address. The discrete ASMedia
-# ASM1164 that drives bays 1/2/5/6 enumerates at a bus address that shifts between boots
-# and BIOS revisions (seen at both 0000:56:00.0 and 0000:58:00.0), so a fixed address
-# goes stale and those four bays go dark. Wiring is identical on every iDX6011 Pro: the
-# Intel PCH SATA ports -> bays 3,4; the four ASMedia ports, in order -> bays 1,2,5,6
-# (top-to-bottom). Discovering it makes a fresh install light every bay first time.
+# ASM1164 that drives bays 1-4 enumerates at a bus address that shifts between boots
+# and BIOS revisions (seen at several addresses), so a fixed address goes stale and
+# those four bays go dark. The non-Pro wiring verified on physical hardware is ASMedia ports -> bays 1-4
+# and Intel PCH ports -> bays 5-6 (top-to-bottom). Discovering the controllers
+# makes this independent of their PCI bus addresses across boots and BIOS revisions.
 map_controller(){   # $1 = PCI address; remaining args = bay numbers in ata-port order
   local pci="$1"; shift
   [ -n "$pci" ] && [ -d "/sys/bus/pci/devices/$pci" ] || return 0
@@ -67,12 +67,12 @@ build_default_map(){
     [ -n "${seen[$pci]:-}" ] && continue; seen[$pci]=1
     vid=$(cat "/sys/bus/pci/devices/$pci/vendor" 2>/dev/null)
     case "$vid" in
-      0x8086) intel="$pci" ;;                     # Intel PCH SATA  -> bays 3,4
-      0x1b21) asm="$pci"   ;;                     # ASMedia ASM1164 -> bays 1,2,5,6
+      0x8086) intel="$pci" ;;                     # Intel PCH SATA   -> bays 5,6
+      0x1b21) asm="$pci"   ;;                     # ASMedia ASM1164  -> bays 1-4
     esac
   done
-  map_controller "$intel" 3 4
-  map_controller "$asm"   1 2 5 6
+  map_controller "$intel" 5 6
+  map_controller "$asm"   1 2 3 4
   # breadcrumb for field diagnosis: a non-conforming unit (chip swap / missing
   # controller) shows up here instead of failing silently with dark bays.
   logger -t ugreen-leds "bay map: intel=${intel:-MISSING} asm=${asm:-MISSING}, ${#PORT_TO_BAY[@]} ports" 2>/dev/null
