@@ -11,7 +11,8 @@ concurrency:
   cancel-in-progress: false
 jobs:
   release:
-    if: github.event_name == 'workflow_dispatch' || !contains(github.event.head_commit.message, '[skip release]')
+    # Release only from GitHub; forge mirrors run CI but must not publish.
+    if: github.server_url == 'https://github.com' && (github.event_name == 'workflow_dispatch' || !contains(github.event.head_commit.message, '[skip release]'))
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
